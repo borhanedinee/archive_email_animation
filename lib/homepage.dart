@@ -1,3 +1,4 @@
+import 'package:email_archive/main.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -12,10 +13,9 @@ class _MyHomePageState extends State<MyHomePage>
   late AnimationController controller;
   late ScrollController scrollController;
 
-  double archiveWidth = 0; // Initialize offsets for each item
+  double archiveWidth = 0; 
   double archiveTopOffset = 0;
-
-  int targetedItem = 0; // Initialize offsets for each item
+  int targetedItem = 0; 
 
   @override
   void initState() {
@@ -23,14 +23,12 @@ class _MyHomePageState extends State<MyHomePage>
     scrollController = ScrollController();
     controller = AnimationController.unbounded(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey.shade800,
@@ -90,12 +88,8 @@ class _MyHomePageState extends State<MyHomePage>
                         offset: Offset(
                             index == targetedItem ? controller.value : 0, 0),
                         child: GestureDetector(
-                          onTap: () {
-                            print(scrollController.offset);
-                          },
                           onHorizontalDragUpdate: (details) {
                             setState(() {
-                              // archiveTopOffset = 100.0 * index - scrollController.offset - 150;
                               archiveTopOffset = 100.0 * index;
                               controller.value += details.delta.dx;
                               archiveWidth = controller.value.abs();
@@ -108,9 +102,11 @@ class _MyHomePageState extends State<MyHomePage>
                             // Optional: Reset the offset when dragging ends
                             setState(() {
                               if (controller.value.abs() < 100) {
+                                // not archiving
                                 controller.value = 0;
                                 archiveWidth = 0;
                               } else {
+                                // archiving ==> deleting item from list
                                 archiveWidth = size.width;
                                 archiveTopOffset = 0;
                                 controller.value = 0;
@@ -139,6 +135,7 @@ class _MyHomePageState extends State<MyHomePage>
                                     ),
                                   ),
                                 );
+                              
                               }
                             });
                           },
